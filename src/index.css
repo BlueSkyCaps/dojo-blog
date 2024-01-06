@@ -11,3 +11,10 @@ code {
   font-family: source-code-pro, Menlo, Monaco, Consolas, 'Courier New',
     monospace;
 }
+.navbar{
+    flex-flow: column;
+}
+.Title{
+    color: red;
+    background-color: aqua;
+}
