@@ -1,4 +1,4 @@
-const Default_Uri = "/test"
+const Default_Uri = "https://apps.reminisce.top/test"
 
 const HTTP_GET = "get"
 const HTTP_POST = "post"

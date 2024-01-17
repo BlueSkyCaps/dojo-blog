@@ -1,24 +1,30 @@
-import {useState} from "react";
+import {useEffect, useState} from "react";
 import {useNavigate} from "react-router-dom";
-import UseRequest from "./UseRequest";
-import {Default_Uri, HTTP_GET, HTTP_POST} from "./Common";
+import ToRequest from "./ToRequest";
+import {Default_Uri, HTTP_POST} from "./Common";
 
 function CreateBlog() {
     let navigate = useNavigate();
     const [title,setTitle] = useState("")
     const [describe,setDescribe] = useState("")
-    function createSub() {
+    const [blog, setBlog] = useState(null)
+    useEffect( () => {
+        (async ()=>{
+            if (blog == null)
+                return
+            const {err} = await ToRequest(Default_Uri, HTTP_POST, blog)
+            if (err == null) {
+                navigate("/")
+            }
+        })()
+    },[blog])
+
+    const createSub =  ()=>{
         if (title.trim()===""||describe.trim()===""){
             return
         }
-        let blog = {title,describe}
-        const {errorMsg} = UseRequest(Default_Uri, HTTP_POST, blog)
-        if (errorMsg==null){
-            navigate("/")
-        }
-        alert(errorMsg)
+        setBlog({title,describe})
     }
-
     return (
         <div>
            <h3>新建一个博客</h3>
@@ -26,7 +32,7 @@ function CreateBlog() {
             <input value={title} onChange={(event)=>{setTitle(event.target.value)}}/>
             <label>内容：</label>
             <textarea value={describe} onChange={(event)=>{setDescribe(event.target.value)}}/>,
-            <button onClick={()=>{createSub()}} type="button">提交</button>
+            <button onClick={()=>createSub()} type="button">提交</button>
         </div>
         );
 }

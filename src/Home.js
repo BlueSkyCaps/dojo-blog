@@ -1,6 +1,7 @@
 import BlogList from "./BlogList";
-import UseRequest from "./UseRequest";
+import ToRequest from "./ToRequest";
 import {Default_Uri, HTTP_GET} from "./Common";
+import {useEffect, useState} from "react";
 
 
 const Home = () => {
@@ -13,12 +14,27 @@ const Home = () => {
     //     {title:"爱机2",describe:"yes 挨近2",link:"https://reminisce.top",id:2},
     //     {title:"爱机3",describe:"yes 挨近3",link:"https://reminisce.top",id:3}
     // ])
+    const [blogs,setBlogs] = useState(null)
+    const [errorMsg,setErrorMsg] = useState(null)
+    const [isPending,setIsPending] = useState(true)
+    useEffect(() => {
+        (async ()=>{
+            if (blogs != null)
+                return
+            const {body, err} = await ToRequest(Default_Uri, HTTP_GET)
+            if (err==null){
+                setBlogs(body)
+                setIsPending(false)
+                return
+            }
+            setErrorMsg(err)
+        })()
+    }, [blogs])
 
-    const {body:blogs,errorMsg,isPending} = UseRequest(Default_Uri, HTTP_GET)
     return (
         <div>
-            {isPending&&<p>loading..</p>}
-            {errorMsg&&<p>{errorMsg}</p>}
+            {isPending&&"loading..."}
+            {errorMsg&&{errorMsg}}
             {blogs&&<BlogList blogs={blogs} title="所有博客↓" />}
         </div>
     );
